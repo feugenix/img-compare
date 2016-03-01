@@ -7,6 +7,7 @@
   "license": "ISC",
   "dependencies": {
       "node-resemble-js": "~0.0.5",
+      "librsvg": "*",
       "glob": "~7.0.0",
       "colors": "*",
       "vow": "*"

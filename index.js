@@ -26,8 +26,8 @@ var tasks = folder1Images.map(function(imagePath) {
             .compareTo(path.resolve(folder2, imagePath));
 
     diff.onComplete(function(data) {
-        if (parseFloat(data.misMatchPercentage) > 0 || data.dimensionDifference.width || data.dimensionDifference.height) {
-            console.error(('image ' + imagePath + ' is different in folders').red);
+        if (parseFloat(data.misMatchPercentage) > 0.01 || data.dimensionDifference.width || data.dimensionDifference.height) {
+            console.error(('images ' + imagePath + ' are different').red);
         }
 
         deferred.resolve(1);
