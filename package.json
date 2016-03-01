@@ -1,0 +1,14 @@
+{
+  "name": "img-compare",
+  "version": "1.0.0",
+  "description": "Batch png image comparison",
+  "main": "index.js",
+  "author": "feugenix",
+  "license": "ISC",
+  "dependencies": {
+      "node-resemble-js": "~0.0.5",
+      "glob": "~7.0.0",
+      "colors": "*",
+      "vow": "*"
+  }
+}
