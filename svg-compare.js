@@ -1,3 +1,5 @@
+'use strict';
+
 var colors = require('colors'),
     glob = require('glob'),
     resemble = require('node-resemble-js'),
@@ -44,24 +46,38 @@ function getSvgContent(imagePath) {
     return deferred.promise();
 }
 
-var tasks = folder1Images.map(function(imagePath) {
+function arePNGsDifferent(data) {
+    return parseFloat(data.misMatchPercentage) > 0.01
+        || data.dimensionDifference.width
+        || data.dimensionDifference.height;
+}
+
+function comparePNGs(png1, png2) {
+    var diff = resemble(png1).compareTo(png2),
+        deffered = vow.defer();
+
+    diff.onComplete(function(data) {
+        if (arePNGsDifferent(data))
+            deffered.reject();
+        else
+            deffered.resolve(1);
+    });
+
+    return deffered.promise();
+}
+
+function compareSVGs(folder1, folder2, imagePath) {
     return vow
         .all([getSvgContent(path.resolve(folder1, imagePath)), getSvgContent(path.resolve(folder2, imagePath))])
-        .spread(function(svg1, svg2) {
-            var diff = resemble(svg1).compareTo(svg2),
-                deffered = vow.defer();
-
-            diff.onComplete(function(data) {
-                if (parseFloat(data.misMatchPercentage) > 0.01 || data.dimensionDifference.width || data.dimensionDifference.height) {
-                    console.error(('images ' + imagePath + ' are different').red);
-                }
-
-                deffered.resolve(1);
-            });
-
-            return deffered.promise();
+        .spread(comparePNGs)
+        .fail(function() {
+            console.log(('images ' + imagePath + ' are different').red);
         });
-});
+}
+
+compareSVGs = compareSVGs.bind(this, folder1, folder2);
+
+var tasks = folder1Images.map(compareSVGs);
 
 vow.all(tasks).then(function() {
     console.log('Done');
