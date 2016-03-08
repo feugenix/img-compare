@@ -2,3 +2,4 @@ node_modules
 typings
 test1
 test2
+.DS_Store
