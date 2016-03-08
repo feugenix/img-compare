@@ -52,7 +52,7 @@ function arePNGsDifferent(data) {
         || data.dimensionDifference.height;
 }
 
-function comparePNGs(png1, png2) {
+function comparePNGObjects(png1, png2) {
     var diff = resemble(png1).compareTo(png2),
         deffered = vow.defer();
 
@@ -69,7 +69,7 @@ function comparePNGs(png1, png2) {
 function compareSVGs(folder1, folder2, imagePath) {
     return vow
         .all([getSvgContent(path.resolve(folder1, imagePath)), getSvgContent(path.resolve(folder2, imagePath))])
-        .spread(comparePNGs)
+        .spread(comparePNGObjects)
         .fail(function() {
             console.log(('images ' + imagePath + ' are different').red);
         });
